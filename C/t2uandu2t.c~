@@ -1,0 +1,10 @@
+#include <stdio.h>
+
+int main()
+{
+  char t = 0xff;
+  unsigned char ut = 0xff;
+  printf("t=%d\tut=%u", t, ut);
+  printf("t2u=%u\tu2t=%d", (unsigned char)t, (char)ut);
+  return 0;
+}

@@ -1,0 +1,10 @@
+#include <stdio.h>
+
+int main()
+{
+  char wolf[] = "Like a wolf";
+  char *p = &wolf[1];
+  unsigned long l = *(unsigned long *)p;
+  printf("%lu\n%x\n%g",l, l);
+  return 0;
+}
