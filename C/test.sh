@@ -1,3 +1,0 @@
-abc
-acd
-ghi
