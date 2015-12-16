@@ -1,6 +1,0 @@
-*** day schedule
-**9:30-10:30 orderby
-**10:40-12:00 orderby
-**13:00-18:00 orderyby
-
-***over orderby
