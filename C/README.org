@@ -1,0 +1,7 @@
+* linuxcore glibc gcc binutils
+  gcc        <----------->     linuxcore
+  gcc        <----------->     glibc
+  gcc        <----------->     binutils
+  glibc      <----------->     binutils
+  glibc      ------------>     linuxcore
+  binutils   <----------->     linuxcore

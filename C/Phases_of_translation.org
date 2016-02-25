@@ -1,0 +1,53 @@
+* Phases of translantion
+
+    The C source file is processed by the compiler as if the following phases take place, in this exact order. Actual implementation may combine these actions or process them 
+diffrently as long as the behavior is the same.
+
+** Phase 1
+1) The individual bytes of the source code file (which is generally a text file in some multibyte encoding such as UTF-8) are mapped, in implementation defined manner, to the 
+characters of the source character set. In particular, OS-dependent end-of-line indicators are replaced by newline characters.
+    The source character set is a multibyte character set which includes the basic source character set as a single-byte subset, consisting of the following 96 characters:
+    a) 5 whitespace characters (space, horizontal tab, vertical tab, form feed, new-line)
+    b) 10 digit characters from '0' to '9'
+    c) 52 letters from 'a' to 'z' and from 'A' to 'Z'
+    d) 29 punctuation characters: _ { } [ ] # ( ) < > % : ; . ? * + - / ^ & | ~ ! = , \ " ’
+2) Trigraph sequences are replaced by corresponding single-character representations.
+
+** Phase 2
+1) Whenever backslash appears at the end of a line (immediately followed by the newline character), both backslash and newline are deleted, combining two physical source lines
+ into one logical source line. This is a single-pass operation, a line ending in two backslashes followed by an empty line does not combine three lines into one).
+2) If a non-empty source file does not end with a newline character after this step (whether it had no newline originally, or it ended with a backslash), the behavior is 
+ undefined.
+
+** Phase 3
+1) The source file is decomposed into comments, sequences of whitespace characters (space, horizontal tab, new-line, vertical tab, and form-feed), and preprocessing tokens, 
+ which are the following
+   a) header names: <stdio.h> or "myfile.h"
+   b) identifiers
+   c) numbers
+   d) character constants and string literals
+   e) operators and punctuators (including alternative tokens), such as +, <<=, <%, ##, or and.
+   f) individual non-whitespace characters that do not fit in any other category
+2) Each comment is replaced by one space character
+3) Newlines are kept, and it's implementation-defined whether non-newline whitespace sequences may be collapsed into single space characters.
+
+** Phase 4
+1) Preprocessor is executed.
+2) Each file introduced with the #include directive goes through phases 1 through 4, recursively.
+3) At the end of this phase, all preprocessor directives are removed from the source.
+
+** Phase 5
+All characters and escape sequences in character constants and string literals are converted from source character set to execution character set (which may be a multibyte 
+character set such as UTF-8, as long as all 96 characters from the basic source character set listed in phase 1 have single-byte representations). If the character specified 
+by an escape sequence isn't a member of the execution character set, the result is implementation-defined, but is guaranteed to not be a null (wide) character.
+
+** Phase 6
+Adjacent string literals are concatenated.
+
+** Phase 7
+Compilation takes place: the tokens are syntactically and semantically analyzed and translated as a translation unit.
+
+** Phase 8
+
+Linking takes place: Translation units and library components needed to satisfy external references are collected into a program image which contains information needed for 
+execution in its execution environment (the OS). 
