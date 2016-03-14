@@ -1,0 +1,16 @@
+ArrayType* arrayTyName = ArrayType::get(aa); 
+GlobalVariable* gvar_array = new GlobalVariable(/*Module=*/*mod,
+                                                /*Type=*/arrayTyName,
+                                                /*isConstant=*/true,
+                                                /*Linkage=*/GlobalValue::PrivateLinkage,
+                                                /*Initializer=*/0, // has initializer, specified below
+                                                /*Name=*/"arrayTyIdString");
+gvar_array->setAlignment(afd);
+std::vector<Constant*> constarrayelems;
+
+constarrayelems.push_back(fasf);
+Constant* constArray = ConstantArray::get(arrayTyName, constarrayelems);
+Constant* constArrayPtr = ConstantExpr::getCast(Instruction::BitCast, gvar_array, dfasf);
+gvar_array->setInitializer(constArray);
+
+

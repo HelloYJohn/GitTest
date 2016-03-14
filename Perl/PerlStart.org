@@ -1,0 +1,8 @@
+* Perl Learn
+** a perl program 
+
+1. while director 
+   a while example 
+   Usage: perl -w  test.pl file1 file2
+   <2016-02-25 Thu>
+
