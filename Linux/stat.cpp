@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
         printf("%s is Regular File, Judged by bits calculate S_IFREG\n", argv[1]);
     }
 
-    if (S_ISDIR(file_stat.st_mode)) {
+   if (S_ISDIR(file_stat.st_mode)) {
         printf("%s is Directory, Judged by S_ISDIR\n", argv[1]);
     }
 
