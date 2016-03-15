@@ -165,6 +165,45 @@
     head file : <unistd.h>
     return    : success, return 0; fail, return -1
 
-12. opendir
+12. opendir readdir
     DIR *opendir(const char *name)
-    function  : 
+    function  : get the file or subdir of some dir
+    head file : <sys/types.h> <dirent.h>
+    return    : success, pointer to the DIR structure; fail, NULL
+    
+    struct dirent *readdir(DIR *dir)
+    function  : get the specific info of some dir
+    head file : <sys/types.h> <dirent.h>
+    return    : success, pointer to the dirent structure; fail, NULL
+    struct dirent {
+        ino_t d_ino; // inode of the dir's enter pointer
+        off_t d_off; // offset of from dir file to next dirent structure
+        unsigned short d_reclen; // the length of record
+        unsigned char d_type; // the type of file pointed
+        char d_name[NAME_MAX+1] // file name 
+    };
+
+13. open / close
+    int open(const char *pahtname, inf flags)
+    int open(const char *pathname, int flags, mode_t mode)
+    function  : get fd of file 
+    head file : <sys/types.h> <sys/stat.h> <fcntl.h>
+    return    : success, return fd of the file; fail, -1
+    flags     : O_RDONLY, O_WRONLY, O_RDWR, O_APPEND, O_ASYNC, O_CREAT, O_DIRECT, O_DIRECTORY, O_EXCEL, O_LARGEFILE, O_NOATIME, O_TRUNC
+    
+    int close(int fd)
+    function  : close fd
+    head file : <unistd.h>
+    return    : success, return 0; fail, return -1
+    
+14. create
+    int create(const char *pathname, mode_t mode)
+    function  : create file
+    head file : <sys/types.h> <sys/stat.h> <fcntl.h>
+    return    : success, return fd of the file; fail, -1
+
+15. read write
+    ssize_t read(int fd, void *buf, size_t count)
+    function  : read the contents of the file according to fd, and write buf
+    head file : <unistd.h>
+    return    : success, return the size of character read, 0 indicates read the end of file; fail, return -1
