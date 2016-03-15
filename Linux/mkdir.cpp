@@ -5,7 +5,7 @@
 
 int main(int argc, char *argv[])
 {
-    const char *pathname="/home/John/Program/GitTest/Linux/a";
+    const char *pathname="/home/john/Program/GitTest/Linux/a";
 
     if (mkdir(pathname, 0700) == -1) {
         perror("Couldn't create the directory");

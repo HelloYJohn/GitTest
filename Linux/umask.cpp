@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    printf("Premission is : %o\n", file_stat.st_mode && 0x1ff);
+    printf("Premission is : %o\n", file_stat.st_mode & 0x1ff);
 
     umask(S_IWGRP | S_IRGRP | S_IXGRP | S_IROTH | S_IWOTH | S_IXOTH);
 

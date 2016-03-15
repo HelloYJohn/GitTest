@@ -1,39 +1,39 @@
-* LINUX PROGRAMc
+* LINUX PROGRAM
 1. char* getcwd(char *buffer, size_t size)
    function : get current director
    head file: <unistd.h>
    return   : success, return pointer to current director; fail, return NULL
    errno    : EINVAL, size=0 or buffer!=NULL; ERANGE,size<the size of current work director; EACCES, permission denied no permission of read or search file 
-
+   
 2. long pathconf(char *path, int name)
    function : dynamic get the max length of current system directory
    head file: <unistd.h>
    return   : success, the max length of directory; fail, -1
    name     : _PC_LINK_MAX, if path is specific path of the file then return max link number of link  if path is directory then return the max link number of directory
-              _PC_MAX_CANON, if path is terminal then return the max length of format output
-              _PC_MAX_INPUT, if path is terminal then return the max length of format input
-              _PC_NAME_MAX, return the max length of filename in crate process
-              _PC_PATH_MAX, return the max length of current work directory
-              _PC_CHOWN_RESTRICTED, chown function call can't apply the file , return !0  if path is directory, the files of the directory apply the rule
-	          _PC_NO_TRUNC, if the length of file > _POSIX_NAME_MAX return !0
-	          _PC_VDISABLE, when path is terminal, if the handle of specific characters return !0
+   _PC_MAX_CANON, if path is terminal then return the max length of format output
+   _PC_MAX_INPUT, if path is terminal then return the max length of format input
+   _PC_NAME_MAX, return the max length of filename in crate process
+   _PC_PATH_MAX, return the max length of current work directory
+   _PC_CHOWN_RESTRICTED, chown function call can't apply the file , return !0  if path is directory, the files of the directory apply the rule
+   _PC_NO_TRUNC, if the length of file > _POSIX_NAME_MAX return !0
+   _PC_VDISABLE, when path is terminal, if the handle of specific characters return !0
    errno    : EINVAL, name param invalid
-              ELOOP, loop exist when parse path
-
+   ELOOP, loop exist when parse path
+   
 3. chdir/fchdir
    int chdir(const char *path)
    int fchdir(int fd)
    function : change current working directory
    return   : success, return 0; fail, return -1
    errno    : EFAULT,path point illegal address
-              ENAMETOOLONG, path to long
-              ENOENT, file is not exist
-              ENOMEM, core insufficient memory
-              ENOTDIR, path isn't directory
-              EACCES, permission denied
-              ELOOP,
-              EIO, occur IO error
-              EBADF, illegal file dirscriptor
+   ENAMETOOLONG, path to long
+   ENOENT, file is not exist
+   ENOMEM, core insufficient memory
+   ENOTDIR, path isn't directory
+   EACCES, permission denied
+   ELOOP,
+   EIO, occur IO error
+   EBADF, illegal file dirscriptor
    
 4. mkdir
    int mkdir(const char *pathname, mode_t mode)
@@ -42,26 +42,26 @@
    mode     : directory permission mode & ~umask & 0777
    return   : success, return 0; fail, return -1
    errno    : EPERM, there are the characters does not conform to the file system directory naming rules
-              EEXIST, dir already exists
-              EFAULT, pathname point to address illegal
-              EACCES, permission denied
-              ENAMETOOLONG, path too long
-              ENOENT, parent directory does not exist
-              ENODIR, the name of parent directories isn't dir
-              ENOMEM, core insufficient memory
-              EROFS, the place is onlyread
-              ELOOP, to much symbolic link when parse dir
-              ENOSPC, insufficient space
-              ENOSPC, run out of disk quota
-
+   EEXIST, dir already exists
+   EFAULT, pathname point to address illegal
+   EACCES, permission denied
+   ENAMETOOLONG, path too long
+   ENOENT, parent directory does not exist
+   ENODIR, the name of parent directories isn't dir
+   ENOMEM, core insufficient memory
+   EROFS, the place is onlyread
+   ELOOP, to much symbolic link when parse dir
+   ENOSPC, insufficient space
+   ENOSPC, run out of disk quota
+   
 5. rmdir
    int rmdir(const char *pathname)
    function : remove dir
    head file: <unistd.h>
    return   : success, return 0; fail, return -1
    errno    : 
-
-
+   
+   
 6. stat, fstat, lstat
    int stat(const char *path, struct stat *buf)
    int fstat(int filedes, struct stat *buf)
@@ -73,32 +73,32 @@
    different: the function of stat and lstat is almost the same, but lstat get the info of link when the file is a link
    
    struct stat {
-       dev_t     st_dev;    // ID of disk
-       ino_t     st_ino;    // idx nu of inode
-       mode_t    st_mode;   // permissin of file
-       nlink_t   st_nlink;  // the nu of hard link
-       uid_t     st_uid;    // user ID
-       gid_t     st_gid;    // group ID
-       dev_t     st_rdev;   // the info of ID when path point specific dev
-       off_t     st_size;   // file, file size; symbolic link, the length of dir pointed symbolic link; dev, 0
-       blksize_t st_blksize;// block size of filesys
-       blkcnt_t  st_blocks; // 
-       time_t    st_atime;  // last assess time
-       time_t    st_mtime;  // last modify time
-       time_t    st_ctime;  // creation time
+   dev_t     st_dev;    // ID of disk
+   ino_t     st_ino;    // idx nu of inode
+   mode_t    st_mode;   // permissin of file
+   nlink_t   st_nlink;  // the nu of hard link
+   uid_t     st_uid;    // user ID
+   gid_t     st_gid;    // group ID
+   dev_t     st_rdev;   // the info of ID when path point specific dev
+   off_t     st_size;   // file, file size; symbolic link, the length of dir pointed symbolic link; dev, 0
+   blksize_t st_blksize;// block size of filesys
+   blkcnt_t  st_blocks; // num of block
+   time_t    st_atime;  // last assess time
+   time_t    st_mtime;  // last modify time
+   time_t    st_ctime;  // creation time
    }
    
-  error     :
-              EACCES permission denied
-              EBADF illegle file des
-              EFAULT addr of path error
-              ELOOP too much symbolic link of file path
-              ENAMETOOLONG too long file name
-              ENOENT the path of file is exist
-              ENOMEM core insufficient memory
-              ENOTDIR the part of path isnot dir
-
-
+   error     :
+   EACCES permission denied
+   EBADF illegle file des
+   EFAULT addr of path error
+   ELOOP too much symbolic link of file path
+   ENAMETOOLONG too long file name
+   ENOENT the path of file is exist
+   ENOMEM core insufficient memory
+   ENOTDIR the part of path isnot dir
+   
+   
 7. chmod fchmod
    int chmod(const char* path, mode_t mode)
    int fchmod(int filedes, mode_t mode)
@@ -106,23 +106,23 @@
    head file  : <sys/types.h> <sys/stat.h>
    return     : success, return 0; fail, return -1
    error      :
-       chmod  
-              EACCES permission denied
-              EFAULT addr of path error
-              EIO occur I/O error
-              ELOOP too much symbolic link of file path given
-              ENAMETOOLONG too long path
-              ENOENT file is not exist
-              ENOMEM core insufficient memory
-              ENOTDIR the part of the path of given is not dir
-              EPERM user ID is diff from owner of file
-              EROFS file is in the read only file sys
-       fchmod
-              EBADF illegal file des
-              EIO occur I/O error
-              EPERM user ID is diff from owner of file
-              EROFS file is in the read only file sys
-
+   chmod  
+   EACCES permission denied
+   EFAULT addr of path error
+   EIO occur I/O error
+   ELOOP too much symbolic link of file path given
+   ENAMETOOLONG too long path
+   ENOENT file is not exist
+   ENOMEM core insufficient memory
+   ENOTDIR the part of the path of given is not dir
+   EPERM user ID is diff from owner of file
+   EROFS file is in the read only file sys
+   fchmod
+   EBADF illegal file des
+   EIO occur I/O error
+   EPERM user ID is diff from owner of file
+   EROFS file is in the read only file sys
+   
 8. chown fchown lchown
    int chown(const char *path, uid_t owner, gid_t group)
    int fchown(int fd, uid_t owner, git_t group)
@@ -131,25 +131,40 @@
    head file  : <sys/types.h> <unistd.h>
    return     : success, return 0; fail, return -1
    error 
-       chown  EACCESS: permission denied
-              EFAULT : addr of path error
-              ELOOP  : too much symbolic of path given 
-              ENAMETOOLONG: too long path
-              ENOENT : file is not exist
-              ENOMEM : core insufficient memory
-              ENOTDIR: the part of path given is not dir
-              EPERM  : user ID is diff from owner of file 
-              EROFS  : file is in the read  only file sys
-       fchown EBADF  : illegal fd
-              EIO    : occur I/O error
-              ENOENT : file is not exist
-              EPERM  : user ID is diff from owner owner of file
-              EROFS  : file is in the read only file sys
-
+   chown  EACCESS: permission denied
+   EFAULT : addr of path error
+   ELOOP  : too much symbolic of path given 
+   ENAMETOOLONG: too long path
+   ENOENT : file is not exist
+   ENOMEM : core insufficient memory
+   ENOTDIR: the part of path given is not dir
+   EPERM  : user ID is diff from owner of file 
+   EROFS  : file is in the read  only file sys
+   fchown EBADF  : illegal fd
+   EIO    : occur I/O error
+   ENOENT : file is not exist
+   EPERM  : user ID is diff from owner owner of file
+   EROFS  : file is in the read only file sys
+   
 9. umask
    mode_t umask(mode_t mask)
    function   : influence new file default permission
    head file  : <sys/type.h> <sys/stat.h>
    return     : success, unmask before modification; fail, always success
+   
+10. link unlink
+    int link(const char *oldpath, const char *newpath)
+    int unlink(const char *pathname)
+    function  : create | delete hard link
+    head file : <unistd.h>
+    return    : success, return 0; fail, return -1
 
-10 
+11. symlink
+    int symlink(const char *oldpath, const char *newpath)
+    function  : create symbol link
+    head file : <unistd.h>
+    return    : success, return 0; fail, return -1
+
+12. opendir
+    DIR *opendir(const char *name)
+    function  : 
