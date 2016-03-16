@@ -207,3 +207,18 @@
     function  : read the contents of the file according to fd, and write buf
     head file : <unistd.h>
     return    : success, return the size of character read, 0 indicates read the end of file; fail, return -1
+
+    ssize_t write(int fd, const void *buf, size_t count)
+    function  : write the contents of buf into the file
+    head file : <unistd.h>
+    return    : success, return the size of character writed; fail, return 1
+
+16. lseek
+    off_t lseek(int fildes, off_t off, int whence)
+    function  : to relocate the position of file according to offset
+    head file : <sys/types.h> <unistd.h>
+    return    : success, return the last offset of file begin; fail, return -1
+    whence    : 
+    SEEK_SET  the offset is off
+    SEEK_CUR  the offset is off + current position
+    SEEK_END  the offset is file size + off
