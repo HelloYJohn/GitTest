@@ -1,0 +1,11 @@
+* Linux Command
+** 1. rsync 
+   -a    represent -rlptgoD
+   -v display    more message
+   --exclude    exclude file or dir
+   --exclude-from    follow filename 
+   --include    include in exclude file, must before --exclude
+   --include--from    follow filename
+   -z   compress
+   
+   
