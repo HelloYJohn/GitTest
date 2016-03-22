@@ -1,0 +1,24 @@
+* 1. 热建Alt + . 或 Esc + .
+  可以把上次命令行的参数给重复出来
+* 2. !$
+  表示上条命令的最后一个字符串
+* 3. date -d@1234567890
+  long转time字符串
+* 4. curl ifconfig.me
+  查看外网IP，当你的机器在内网时
+* 5. 这行脚本能输出你最常用的十条命令
+  history | awk '{CMD[$2]++;count++;} END { for (a in CMD )print
+  CMD[a] " " CMD[a]/count*100 "% " a }' | grep -v "./" | column -c3 -s "
+  " -t | sort -nr | nl | head -n10    
+* 6. 下载整个网站 
+  wget --random-wait -r -p -e robots=off -U mozilla http://www.example.com    
+* 7. read -u3
+  这里是从3描述符处读取
+* 8. tail -f filename
+  动态查询文件
+* 9. xargs的作用
+  很多命令不支持管道传递参数
+  find /sbin -perm +700 | ls -l    error
+  find /sbin -perm +700 | xargs ls -l  success
+  xargs可以读入stdin的内容，并以空白字元或断行子元作为分辨
+  xargs -a fileName 从文件fileName中读取

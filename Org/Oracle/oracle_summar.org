@@ -1,0 +1,11 @@
+* 1. varchar 与 varchar2
+    1.varchar2把所有字符都占两字节处理(一般情况下)，varchar只对汉字和全角等字符占两字节，数字，英文字符等都是一个字节；
+    2.VARCHAR2把空串等同于null处理，而varchar仍按照空串处理；
+    3.VARCHAR2字符要用几个字节存储，要看数据库使用的字符集；
+* 2. char varchar varchar2
+    char 是固定长度，少于固定长度后面不空格
+    varchar varchar2不补
+* 3. oracle版本查询
+    select * from v$version;
+    select * from product_component_version;
+    
