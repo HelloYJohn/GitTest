@@ -1,0 +1,11 @@
+* random in linux
+** 1. date
+   date +%s    get timestamp
+   date +%N    get ns
+   date +%s%N  get timestamp+ns
+** 2. $RANDOM
+   echo $RANDOM
+** 3. /dev/urandom
+   head -200 /dev/urandom | cksum | cut -f1 -d " "
+** 4. /proc/sys/kernel/random/uuid
+   cat /proc/sys/kernel/random/uuid | cksum | cut -f1 -d " "
