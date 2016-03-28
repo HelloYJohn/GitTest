@@ -1,0 +1,7 @@
+* emacs summary
+** 1. flush-lines 
+   (flush-lines REGEXP &optional RSTART REND INTERACTIVE)
+   Delete lines containing matches for REGEXP.
+   eg: M-X flush-lines
+   input: ^$
+   output: delete all space lines
