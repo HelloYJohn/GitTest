@@ -1,0 +1,37 @@
+(defun my-max (a b)
+  (if (> a b)
+      a b))
+(my-max 1 3)
+(defun fib (n)
+  (cond
+   ((= n 0) 0)
+   ((= n 1) 1)
+   (t (+ (fib (- n 1))
+         (fib (- n 2))))))
+(fib 10)
+
+(defun factorial (n)
+  (let ((res 1))
+    (while (> n 1)
+      (setq res (* res n)
+            n (- n 1)))
+    res)
+  )
+(factorial 5)
+(defun f1 (n)
+  "abc"
+  )
+(f1 1)
+;; default parameters
+(defun hello-world (&optional name)
+  (or name (setq name "Emacser"))
+  (message "Hello, %s" name)
+  )
+(hello-world)
+
+;; and check parameters
+(defun square-number-p (n)
+  (and (>= n 0)
+       (= (/ n (sqrt n)) (sqrt n)))
+  )
+(square-number-p -1)
