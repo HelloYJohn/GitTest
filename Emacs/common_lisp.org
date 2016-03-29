@@ -1,0 +1,47 @@
+* 第一章 简介
+** 1.1 New Tools
+a function return the sum of less number n
+#+BEGIN_SRC emacs-lisp
+(defun sum (n)
+  (let ((s 0))
+    (dotimes (i n s)
+      (incf s i))))
+
+(sum 999)
+#+END_SRC
+
+#+RESULTS:
+: 498501
+
+#+BEGIN_SRC C -n -r includes <stdio.h>
+int sum(int n) {
+    int i, s = 0;
+    for (i = 0; i < n; i++) {
+        s += i;
+    }
+    return s;
+}
+printf("%d\n", sum(100));
+#+END_SRC
+
+#+RESULTS:
+: 4950
+
+a function , input n, return sum n + argument
+#+BEGIN_SRC emacs-lisp
+(defun addn (n)
+  #'(lamdba (x)
+    (+ x n)))
+(addn 100)
+#+END_SRC
+
+#+RESULTS:
+| lamdba | (x) | (+ x n) |
+
+** 1.2 New Techniques
+** 1.3 New Approach
+
+* 第二章 Welcome to Lisp
+** 2.1 Form
+   toplevel :lisp系统含有的一个交互式前端.
+

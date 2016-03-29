@@ -1,7 +1,8 @@
+#!/usr/bin/emacs --script
 ;; compress
 (defun compress (x)
   (if (consp x)
-      (comr2 (car x) 1 (cdr x))
+      (compr (car x) 1 (cdr x))
       x))
 
 (defun compr (elt n lst)
@@ -17,7 +18,7 @@
   (if (> n 1)
       (list n elt)
       elt))
-(compress '(1))
+(message (format "%s" (compress '(1))))
 
 ;; decompress
 
@@ -37,4 +38,4 @@
     (cons elt (list-of (- n 1) elt)))
   )
 (list-of 3 2)
-(uncompress '((3 1) (4 100)))
+(message (format "%s" (uncompress '((3 1) (4 100)))))
