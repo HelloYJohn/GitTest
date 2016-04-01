@@ -7,5 +7,11 @@
    --include    include in exclude file, must before --exclude
    --include--from    follow filename
    -z   compress
+
+** 删除除某些文件以外的文件或文件夹
+   1. find . ! -name "exceptFileName" -exec rm -fr {} \;
+   2. shopt -s extglob
+      rm -fr !(exceptFileName1 | exceptFileName2 ...)
+   3. ls | grep -v exceptFileName1 | xargs rm -f
    
    
