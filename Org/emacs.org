@@ -5,3 +5,5 @@
    eg: M-X flush-lines
    input: ^$
    output: delete all space lines
+
+** 2.

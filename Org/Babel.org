@@ -1,0 +1,116 @@
+* babel learn
+** ditaa
+#+begin_src ditaa :file ./img/orgmode-babel-ditaa1.png :cmdline -r
++---------+
+| cBLU    |
+|         |
+|    +----+
+|    |cPNK|
+|    |    |
++----+----+
+ #+end_src
+
+ #+RESULTS:
+ [[file:./img/orgmode-babel-ditaa1.png]]
+
+ #+BEGIN_SRC ditaa :file :file ./img/orgmode-babel-ditaa2.png :cmdline -r
+       +--------+   +-------+    +-------+
+       |        | --+ ditaa +--> |       |
+       |  Text  |   +-------+    |diagram|
+       |Document|   |!magic!|    |       |
+       |     {d}|   |       |    |       |
+       +---+----+   +-------+    +-------+
+           :                         ^
+           |       Lots of work      |
+           +-------------------------+
+ #+END_SRC
+
+ #+RESULTS:
+ [[file:./img/orgmode-babel-ditaa2.png]]
+
+ #+BEGIN_SRC ditaa :file ./img/orgmode-babel-ditaa3.png :cmdline -r
+   /-------------+-------------\
+   |cRED RED     |cBLU BLU     |
+   +-------------+-------------+
+   |cGRE GRE     |cPNK PNK     |
+   +-------------+-------------+
+   |cBLK BLK     |cYEL YEL     |
+   \-------------+-------------/
+ #+END_SRC
+
+ #+RESULTS:
+ [[file:./img/orgmode-babel-ditaa3.png]]
+
+ ** latex
+
+ #+begin_src latex :file ./orgmode-babel-latex.png :exports results
+   \begin{equation}
+   \Pr(X_t=j|X_{t-1}=i) = \frac{j(j-1)}{2}\Big(\frac{i}{N}\Big)^j\Big(\frac{N-i}{N}\Big)^{n-j}
+   \end{equation}
+ #+end_src
+
+ #+RESULTS:
+ +BEGIN_LaTeX
+ [[file:./orgmode-babel-latex.png]]
+ #+END_LaTeX
+
+ #+BEGIN_SRC plantuml :file ./img/orgmode-babel-sequenceuml.png
+   Alice -> Bob: synchronous call
+   Alice ->> Bob: asynchronous call
+ #+END_SRC
+
+ #+RESULTS:
+ [[file:./img/orgmode-babel-sequenceuml.png]]
+
+ ** python
+ #+name: square
+ #+header: :var x=0
+ #+begin_src python
+   return x*x
+ #+end_src
+
+#+RESULTS: square
+: 0
+
+#+CALL: square(x=6)
+
+#+RESULTS:
+: 36
+
+** sh
+#+NAME: directories
+#+begin_src sh :results replace
+  cd ~/.emacs.d/ && du -sc *.el |grep -v total
+#+end_src
+
+#+RESULTS:
+[[file:./img/orgmode-babel-ditaa1.png]]
+
+#+RESULTS: directories
+| 12 | company-statistics-cache.el |
+|  4 | ede-projects.el             |
+|  8 | init.el                     |
+
+** R
+#+name: directory-pie-chart(dirs=directories)
+#+begin_src R :file ./img/orgmode-babel-Rdirs.png :var dirs=directories :results graphics
+  pie(dirs[,1], labels = dirs[,2])
+#+end_src
+
+#+RESULTS: directory-pie-chart
+[[file:./img/orgmode-babel-Rdirs.png]]
+
+
+
+#+name: simpledrift(N=1000, X1=600, ngens=100)
+#+begin_src R :file ./img/orgmode-babel-R1.png :var ngens=100 X1=600 N=1000 :results graphics
+  p <- numeric(ngens)
+  p[1] <- X1/N
+  for(g in 2:ngens)
+      p[g] <- rbinom(1, size=N, prob=p[g-1]) / N
+  plot(p, type="l", ylim=c(0,1), xlab="Generation", ylab="Proportion red")
+#+end_src
+
+#+RESULTS: simpledrift
+[[file:./img/orgmode-babel-R1.png]]
+
