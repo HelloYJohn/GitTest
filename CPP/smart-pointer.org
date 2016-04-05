@@ -1,0 +1,146 @@
+* Smart Pointer introduce
+智能指针是CPP中管理资源的一种方式,用智能指针管理资源,不必担心资源泄露.
+
+** 1. auto_ptr
+*** 要求
+    auto_prt管理的资源必须绝对没有一个以上的auto_ptr同时指向它.
+    #+BEGIN_SRC 
+    std::auto_ptr<classA> ptr1(new classA); //OK
+    std::auto_ptr<classA> ptr2 = new classA;//ERROR
+    #+END_SRC
+*** 拥有权的转移
+    #+BEGIN_SRC C
+    //initizlize an auto_ptr with a new object
+    std::auto_ptr<classA> ptr1(new classA);
+
+   //copy the auto_ptr
+    std::auto_ptr<classA> ptr2(ptr1);
+    #+END_SRC C 
+    在第一个语句中，ptr拥有了那个new 出来的对象。在第二个语句中，拥有权由ptr1 转移到ptr2,此后，ptr2拥有那个对象，ptr1则是一个空指针。
+    #+BEGIN_SRC 
+    //initizlize an auto_ptr with a new object
+    std::auto_ptr<classA> ptr1(new classA);
+
+   //copy the auto_ptr
+   std::auto_ptr<classA> ptr2;
+   ptr2 = ptr1;
+    #+END_SRC
+    在上面的语句中，如果ptr2已经拥有一个对象，则，赋值动作发生时，会调用delete，将该对象删除
+    
+    #+BEGIN_SRC C
+    /this is a bad example
+    template <class T>
+    void bad_print(std::auto_ptr<T> p)//p gets ownership of passed argument
+    {
+        //does p own an object?
+        if (p.get() == NULL) 
+        {
+            std::cout << "NULL";
+        }
+        else
+        {
+            std::cout << *p;
+        }
+        //Oops,exiting delete the object to which p refers
+    }
+    
+    
+    int main(int argc, char const* argv[])
+    {
+        std::auto_ptr<int> p(new int);
+        *p = 42;      // change value to which p refers
+        bad_print(p); // Oops,deletes the memory to which p refers
+        *p = 18;      // RUNTIME ERROR
+        return 0;
+    }
+    #+END_SRC
+*** 注意事项
+1. auto_ptr(以及后面介绍的std::tr1::shared_ptr)在其析构函数内做delete,而不是delete[]动作，那意味着在动态分配而得到的array上使用auto_ptr(或tr1::shared_ptr)
+是一个馊主意。但是，这样的代码是可以通过编译的，所以需要用户自己留心。下面的代码就会出现用new []分配资源，用delete而不是delete[] 释放资源一样的问题
+2. 标准容器需要元素具有可复制和可赋值的特性，而复制和赋值操作会使auto_ptr 发生所有权转移，所以，auto_ptr 不能存放在容器中
+
+** scoped_ptr
+*** 要求
+    只能在本作用域中使用，不希望被转让
+    scoped_ptr 通过将拷贝构造函数和operator= 函数声明为私有，以此阻止智能指针的复制，也就关闭了所有权转移的大门
+    scoped_ptr 的用法与auto_ptr 几乎一样，大多数情况下它可以与auto_ptr 相互替换，它也可用从一个auto_ptr 获得指针的管理权（同时，auto_ptr 失去管理权）
+    scoped_ptr 也具有与auto_ptr 同样的"缺陷"——不能用作容器的元素，但原因不同，auto_ptr 是因为它的转移语义，而scoped_ptr
+    则是因为不支持拷贝和赋值，不符合容器对元素类型的基本要求
+    #+BEGIN_SRC C
+    auto_ptr<int> ap(new int(10)); // 一个auto_ptr<int>
+    scoped_ptr<int> sp(ap);        // 从auto_ptr 获得原始指针
+    assert(ap.get() == 0);         // 原auto_ptr 不再拥有指针
+    
+    ap.reset(new int(20));         // auto_ptr 拥有新的指针
+    cout << *ap << "," << *sp << endl;
+    
+    auto_ptr<int> ap2;
+    ap2 = ap;              // ap2 从ap 获得原始指针，发生所有权转移
+    assert(ap.get() == 0); // ap 不再拥有指针
+    scoped_ptr<int> sp2;   // 另一个scoped_ptr
+    sp2 = sp;              // 赋值操作，无法通过编译
+    #+END_SRC
+** scoped_array
+   scoped_array 与scoped_ptr 没什么区别，主要区别就是用 new[] 分配资源，用 delete [] 释放资源，而scoped_ptr 用new 分配资源，用delete 释放资源
+   区别:
+   scoped_array 与 scoped_ptr 接口和功能几乎一样，主要区别如下：
+   1. 构造函数接受的指针p 必须是new [] 的结果，而不能是new 表达式的结果。
+   2. 没有* ， -> 操作符重载，因为scoped_array 持有的不是一个普通指针
+   3. 析构函数使用delete []释放资源，而不是delete
+   4. 提供operator[] 操作符重载，可以像普通数组一样使用下标访问元素
+   5. 没有begin() end() 等类似容器的迭代器
+
+** shared_ptr
+   shared_ptr 是一个最像指针的"智能指针"，它实现了引用计数的功能，所以，指针可以随意复制，在函数间传递，或者存储在容器里面
+*** 小心循环引用
+    #+BEGIN_SRC C
+    #include "stdafx.h"
+    #include <string>
+    #include <iostream>
+    #include <boost/shared_ptr.hpp>
+    #include <boost/weak_ptr.hpp>
+    
+    using namespace std;
+    using namespace boost;
+    
+    class CCycleRef
+    {
+    public:
+        ~CCycleRef()
+        {
+            cout <<"destroying CCycleRef"<<endl;
+        }
+    
+    public:
+        shared_ptr<CCycleRef> selfRef;
+    };
+    
+    void CycleRefTest()
+    {
+        shared_ptr<CCycleRef> cyclRef(new CCycleRef());
+        cyclRef->selfRef = cyclRef;
+    
+        cout<<"reference count:"<<cyclRef.use_count()<<endl;
+    }
+    
+    int _tmain(int argc, _TCHAR* argv[])
+    {
+        CycleRefTest();
+        
+        return 0;
+    }    
+    #+END_SRC
+    
+    #+BEGIN_SRC C
+    class CCycleRef
+    {
+    public:
+        ~CCycleRef()
+        {
+            cout <<"destroying CCycleRef"<<endl;
+        }
+    
+    public:
+        weak_ptr<CCycleRef> selfRef;
+    };
+    #+END_SRC
