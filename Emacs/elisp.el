@@ -56,3 +56,8 @@ foo
 
 (compress '(1 1 1 0 1 0 0 0 0 1))
 >>>>>>> bd03c3941b06f59a2e777581ccaadb6002c83357
+(defun enigma (x)
+      (and (not (null x))
+           (or (null (car x))
+               (enigma (cdr x)))))
+(enigma '(1))

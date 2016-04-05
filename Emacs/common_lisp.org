@@ -321,5 +321,211 @@ lst
 : DONE
 
 ** 2.14 Function as Objects
-   
+#+BEGIN_SRC lisp
+(function +)
+#+END_SRC
+
+#+RESULTS:
+: #<FUNCTION +>
+   等同于
+#+BEGIN_SRC lisp
+#'+
+#+END_SRC
+
+#+RESULTS:
+: #<FUNCTION +>
+  这个缩写称为升引号(sharp-quote)
+  和别种对象类似,可以把函数当作实参传入.
+  apply接受一个函数和实参列表,并返回把传入函数应用在实参列表的结果
+#+BEGIN_SRC lisp
+(apply #'+ '(1 2 3))
+#+END_SRC
+
+#+RESULTS:
+: 6
+  apply和function的都可以接受任意数量的实参,唯一区别是apply的最后一个参数必须是列表
+  lambda表达式里的lambda不是一个操作符,而只是个符号.
+#+BEGIN_SRC lisp
+((lambda (x) (+ x 100)) 1)
+#+END_SRC
+
+#+RESULTS:
+: 101
+#+BEGIN_SRC lisp
+(funcall #'(lambda (x) (+ x 100)) 1)
+#+END_SRC
+
+#+RESULTS:
+: 101
+
+** 2.15 Types
+   数值才有类型,而变量没有
+   每个对象都贴有一个标明其类型的标签.这种方法叫做显示类型(manifest typing)
+   你不需要声明变量的类型,因为变量可以存放任意类型的对象.
+   common lisp的内置类型,组成一个类别的层级,对象总是不止属于一个类型
+#+begin_example
+27的类型,依普遍性的增加排序依序是 fixnum integer rational real number atom t 
+t类型所有类型的基类(supertype),所以所有对象都属于t类型
+#+end_example
+   typep接受一个对象和一个类型,判断对象是否是该类型,是返回真
+#+BEGIN_SRC lisp
+(typep 27 'integer)
+#+END_SRC
+
+#+RESULTS:
+: T
+** 2.16 Looking Forward
+   lisp是来写lisp的语言
+
+** Summary
+   1. Lisp 是一种交互式语言。如果你在顶层输入一个表达式， Lisp 会显示它的值。
+   2. Lisp 程序由表达式组成。表达式可以是原子，或一个由操作符跟着零个或多个实参的列表。前序表示法代表操作符可以有任意数量的实参。
+   3. Common Lisp 函数调用的求值规则： 依序对实参从左至右求值，接着把它们的值传入由操作符表示的函数。 quote 操作符有自己的求值规则，它完封不动地返回实参。
+   4. 除了一般的数据类型， Lisp 还有符号跟列表。由于 Lisp 程序是用列表来表示的，很轻松就能写出能编程的程序。
+   5. 三个基本的列表函数是 cons ，它创建一个列表； car ，它返回列表的第一个元素；以及 cdr ，它返回第一个元素之后的所有东西。
+   6. 在 Common Lisp 里， t 表示逻辑 真 ，而 nil 表示逻辑 假 。在逻辑的上下文里，任何非 nil 的东西都视为 真 。基本的条件式是 if 。 and 与 or 是相似的条件式。
+   7. Lisp 主要由函数所组成。可以用 defun 来定义新的函数。
+   8. 自己调用自己的函数是递归的。一个递归函数应该要被想成是过程，而不是机器。
+   9. 括号不是问题，因为程序员通过缩排来阅读与编写 Lisp 程序。
+   10. 基本的 I/O 函数是 read ，它包含了一个完整的 Lisp 语法分析器，以及 format ，它通过字符串模板来产生输出。
+   11. 你可以用 let 来创造新的局部变量，用 defparameter 来创造全局变量。
+   12. 赋值操作符是 setf 。它的第一个实参可以是一个表达式。
+   13. 函数式编程代表避免产生副作用，也是 Lisp 的主导思维。
+   14. 基本的迭代操作符是 do 。
+   15. 函数是 Lisp 的对象。可以被当成实参传入，并且可以用 lambda 表达式来表示。
+   16. 在 Lisp 里，是数值才有类型，而不是变量。
+
+** Exercises
+#+BEGIN_SRC lisp
+(defun printNPoint (n)
+  (case n
+    ((= 0 n) (format t ""))
+    ((= 1 n) (format  t "."))
+    (t (progn (foramt t ".") 
+        (printNPoint (- n 1))))))
+(printNPoint 1)
+#+END_SRC
+#+RESULTS:
+: NIL
+
+#+BEGIN_SRC lisp
+(defun countA (n l)
+  (if (null l)
+    n
+    (if (eql (car l) 'a)
+      (countA (+ n 1) (cdr l))
+      (countA n (cdr l))
+    )
+  )  
+)
+(countA 0 '(a b c a c a a))
+
+#+END_SRC
+
+#+RESULTS:
+: 4
+
+* 第三章 List
+** 3.1 Conses
+#+BEGIN_SRC lisp
+(setf x (cons 'a nil))
+#+END_SRC
+
+#+RESULTS:
+| A | 
+  一个列表中可以有任何类型的对象作为元素,可以包含另一个列表.
+  嵌套列表 
+  所有不是cons对象的东西,都是一个原子(atom),利用consp判断是否是cons对象
+#+BEGIN_SRC lisp
+(consp nil)
+(listp nil)
+#+END_SRC
+
+#+RESULTS:
+: T
+
+** 3.2 Equality
+  当你调用cons时, Lisp会配置一块新的内存给两个指针,所以用同样的参数调用cons两次,我们得到两个数值看起来一样,实际是不同的对象.
+#+BEGIN_SRC lisp 
+(eql (cons 'a nil) (cons 'a nil))
+#+END_SRC
+
+#+RESULTS:
+: NIL
+#+BEGIN_SRC lisp
+(equal (cons 'a nil) (cons 'a nil))
+#+END_SRC
+
+#+RESULTS:
+: T
+  equal与eql的区别是参数相同,则返回真.
+#+BEGIN_SRC lisp
+(defun our-equal (x y)
+  (or (eql x y)
+      (and (consp x)
+           (consp y)
+           (our-equal (car x) (car y))
+           (our-equal (cdr x) (cdr y)))))
+(our-equal '(1 2 3) (cons 1 (cons 2  3)))
+  our-equal 只适用于符号列表. 
+#+END_SRC 
+
+#+RESULTS:
+: NIL
+** 3.3 Why Lisp Has No Pointers
+  cons对象有指针指向它们的元素,变量有指针指向他们的值.
+  当你赋一个值给变量或将这个值存在数据结构中,其实被存储的是指向这个值得指针.当你想要取得变量的值,或是存在数据结构中的内容时,lisp返回指向这个值得指针.
+
+** 3.4 Building Lists
+  函数copy-list接受一个列表,然后返回列表的复本.新的列表会有同样的元素,但是装在新的Cons对象里.
+#+BEGIN_SRC lisp
+(setf x '(a b c)
+  y (copy-list x))
+#+END_SRC
+
+#+RESULTS:
+| A | B | C |
+
+#+BEGIN_SRC lisp
+(defun our-copy-list (lst)
+  (if (atom lst)
+    lst
+    (cons (car lst) (our-copy-list (cdr lst)))))
+(our-copy-list (cons (cons 1 2) (cons 3 4)))
+#+END_SRC
+
+#+RESULTS:
+: ((1 . 2) 3 . 4)
+
+  函数append返回任何数目的列表串接(concatenation) 
+#+BEGIN_SRC lisp
+(append '(a b) '(c d) 'e)
+#+END_SRC
+
+#+RESULTS:
+: (A B C D . E)
+  通过这么做,它复制了所有的参数,除了最后一个
+
+** 3.5 Example Compress
+#+BEGIN_SRC lisp
+(defun compress (lst)
+  (compress-d 1 lst)
+)
+(defun compress-d (n lst)
+  (if (null (car lst))
+    nil
+    (if (equal (car lst) (car (cdr lst)))
+      (compress-deal n (car lst) (cdr lst))
+      (cons (car lst) (compress-d (cdr lst)))
+    )
+  )
+)
+(defun compress-deal (n lst est)
+  (compress-d (+ n 1) est)
+)
+(compress '(1 1 1))
+#+END_SRC
+
+#+RESULTS:
+: COMPRESS-DEAL
 
