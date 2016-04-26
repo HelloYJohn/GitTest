@@ -1,0 +1,2 @@
+* emacs skill
+** vim and emacs is efficient
