@@ -1,4 +1,5 @@
 import paramiko
+import os
 # 定义一个类，表示一台远端linux主机
 class Linux(object):
     # 通过IP, 用户名，密码，超时时间初始化一个远程Linux主机
@@ -33,7 +34,34 @@ class Linux(object):
 
     # put单个文件
     def sftp_put(self, localfile, remotefile):
+        print(localfile, " ==> " , remotefile)
         self.sftp.put(localfile, remotefile)
+
+    def sftp_mkdir(self, remotedir):
+        try:
+            self.sftp.stat(os.path.dirname(remotedir))
+        except Exception as e:
+            self.sftp_mkdir(os.path.dirname(remotedir))
+        try:
+            self.sftp.stat(remotedir)
+            pass
+        except Exception as e:
+            print("mkdir ", remotedir)
+            self.sftp.mkdir(remotedir)
+
+    # put directory
+    def sftp_put_dir(self, localdir, remotedir):
+        for root, dirs, files in os.walk(localdir):
+            # print("localdir = ", localdir)
+            # print("remotedir = ", remotedir)
+            # print("root = ", root)
+            remote_home = remotedir+root.replace(os.path.dirname(localdir), "").replace("\\", "/")
+            # print("remote_home = ", remote_home)
+            for dir in dirs:
+                self.sftp_mkdir((remote_home+"/"+dir).replace("\\", "/"))
+            for file in files:
+                self.sftp_put(os.path.join(root, file), (remote_home+"/"+file).replace("\\", "/"))
+
 
     # removed单个文件
     def sftp_remove(self, remotefile):
@@ -41,23 +69,22 @@ class Linux(object):
 
 
 if __name__ == '__main__':
-    remotefile = r'/home/yuanwenxing/test/python/xxoo.xml'
-    localfile = r'C:/Users/Administrator/Desktop/xxoo.xml'
+    remote_dir = '/home/hexianqing/john-y_tmp'
+    local_dir = 'E:\code\python\import'
 
-    host = Linux('xxx', 'xxx', 'xxx')
+    host = Linux('172.16.12.135', 'zhanghenan', '123456')
     host.connect()
 
-    HOME_DIR=r'/home/yuanwenxing/release_2.2/'
-    #open file
+    # open file
+
+    HOME_DIR=r'/home/zhanghenan/source/trunk/'
     fp = open('sftp.INPUT')
     line = fp.readline()
     while(line):
         spLine = line[:-1].split('    ')
         tmpfrom = spLine[0]
         tmpto = HOME_DIR + spLine[1]
-        print(tmpfrom, end=' ==> ')
-        print(tmpto)
-        host.sftp_remove(tmpto)
+        host.sftp_put(tmpfrom, tmpto)
         line = fp.readline()
 
 
@@ -65,6 +92,10 @@ if __name__ == '__main__':
     #host.sftp_get(remotefile, localfile)
 
     # # 将本地的xxoo.txt put到远端，并保持为xxoo.txt
-    # host.sftp_put(localfile, remotefile)
-
+   
+    # host.sftp_put("E:/code/python/stfp/test_sftp.py", "/home/hexianqing/john-y_tmp/abc")
+    # print(os.path.join(local_dir, "test_sftp.py"))
+    # print(os.path.join(remote_dir, "abc").replace("\\", "/"))
+    # host.sftp_mkdir(os.path.join(remote_dir, "bcd/bc").replace("\\", "/"))
+    # host.sftp_put_dir(local_dir, remote_dir)
     host.close()
